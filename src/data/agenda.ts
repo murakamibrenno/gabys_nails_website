@@ -11,10 +11,7 @@ const MESES = [
   'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez',
 ]
 
-const HORARIOS_BASE = [
-  '09:00', '10:00', '11:00', '13:00',
-  '14:00', '15:00', '16:00', '17:00',
-]
+import { HORARIOS_BASE } from './horarios'
 
 // Gera os proximos `qtd` dias uteis (seg-sab), a partir de amanha.
 export function proximosDias(qtd = 14): DiaDisponivel[] {
