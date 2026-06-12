@@ -26,5 +26,9 @@ Thumbs.db
 .env.*
 !.env.example
 
+# SQLite local
+server/data/*.sqlite
+server/data/*.sqlite-*
+
 # Cursor tooling (not part of the website)
 skills/

@@ -1,40 +1,67 @@
-# Gaby Nails — Mockup de Agendamento
+# Gaby Nails — Site + Agendamento
 
-Mockup de plataforma de agendamento para o estúdio **Gaby Nails**, feito com **React + Vite + TypeScript + Tailwind CSS**. Sem backend: os dados são estáticos e os agendamentos são salvos no `localStorage` do navegador.
+Plataforma do estúdio **Gaby Nails** com site institucional, galeria, agendamento online e painel administrativo. Stack: **React + Vite + Express + SQLite**.
 
-## Como rodar
+## Rodar localmente (testar na sua máquina)
 
 ```bash
 npm install
+cp .env.example .env    # Windows: copy .env.example .env
+npm run db:migrate
 npm run dev
 ```
 
-Acesse o endereço exibido no terminal (por padrão `http://localhost:5173`).
+| O quê | URL |
+|---|---|
+| Site | http://localhost:5173 |
+| API | http://localhost:3001 |
+| Admin | http://localhost:5173/admin/login |
+| Senha admin (padrão) | `gaby123` (definida no `.env`) |
 
-Outros comandos:
+O comando `npm run dev` sobe **frontend + API** juntos. O Vite faz proxy de `/api/*` para a API local.
 
-```bash
-npm run build     # build de produção (gera a pasta dist/)
-npm run preview   # pré-visualiza o build
-```
+## Fluxo
+
+1. **Cliente** — agenda sem login; o horário fica reservado (`pending`).
+2. **Admin** — entra em `/admin`, vê pendentes, fala no WhatsApp e confirma ou cancela.
+3. **Conflito** — dois clientes no mesmo horário: o segundo recebe erro 409.
 
 ## Estrutura
 
-- `src/pages/` — páginas: Início, Serviços (catálogo), Galeria e Agendamento.
-- `src/components/` — componentes de UI (Navbar, Footer, Hero, cards, motivos decorativos em `Decor.tsx`) e o wizard de agendamento em `components/booking/`.
-- `src/assets/` — imagens importadas pelo bundler (logo).
-- `src/data/` — dados mockados:
-  - `servicos.ts` — Alongamento (R$ 190) e Manutenção (R$ 115), com esmaltação em gel e decorações inclusas.
-  - `galeria.ts` — placeholders prontos para receber as fotos reais.
-  - `agenda.ts` — geração de dias e horários disponíveis (simulados).
-- `src/context/AgendamentoContext.tsx` — estado do fluxo de agendamento.
+```
+src/           → frontend React
+server/        → API Express + SQLite
+server/data/   → database.sqlite (gerado localmente, não vai pro git)
+```
 
-## Personalização
+## Variáveis de ambiente (`.env`)
 
-- **Cores e fontes:** definidas em `tailwind.config.js` (paleta creme + cereja extraída da logo; fontes Fraunces, Sacramento e Hanken Grotesk).
-- **Fotos da galeria:** preencha o campo `src` de cada item em `src/data/galeria.ts`.
-- **Logo:** `src/assets/logo.png` (usada nos componentes) e `public/logo.png` (favicon).
+```
+PORT=3001
+ADMIN_PASSWORD=gaby123
+JWT_SECRET=troque-este-segredo-antes-de-producao
+DATABASE_PATH=./server/data/database.sqlite
+NODE_ENV=production   # usar na VPS
+```
 
-## Observações
+## Produção (VPS)
 
-Este é um mockup demonstrativo. O fluxo de agendamento é uma simulação e não envia nenhuma mensagem ou requisição real.
+```bash
+npm install
+npm run db:migrate
+npm run build
+npm start
+```
+
+Configure Nginx para proxy + HTTPS e faça backup diário de `server/data/database.sqlite`.
+
+## Comandos
+
+```bash
+npm run dev          # frontend + API (desenvolvimento)
+npm run dev:client   # só frontend
+npm run dev:server   # só API
+npm run db:migrate   # criar/atualizar tabelas
+npm run build        # build do frontend
+npm start            # API + serve dist/ (produção)
+```

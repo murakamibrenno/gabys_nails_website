@@ -21,6 +21,8 @@ export interface DadosCliente {
   observacoes: string
 }
 
+export type BookingStatus = 'pending' | 'confirmed' | 'cancelled'
+
 export interface Agendamento {
   id: string
   servicoId: string
@@ -28,6 +30,12 @@ export interface Agendamento {
   preco: number
   data: string
   horario: string
+  status?: BookingStatus
   cliente: DadosCliente
   criadoEm: string
+}
+
+export interface HorarioDisponivel {
+  horario: string
+  ocupado: boolean
 }

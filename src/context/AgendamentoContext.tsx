@@ -1,11 +1,10 @@
 import {
   createContext,
   useContext,
-  useEffect,
   useState,
   type ReactNode,
 } from 'react'
-import type { Agendamento, DadosCliente } from '../types'
+import type { DadosCliente } from '../types'
 
 interface RascunhoAgendamento {
   servicoId: string | null
@@ -25,11 +24,9 @@ const rascunhoInicial: RascunhoAgendamento = {
 
 interface AgendamentoContextValue {
   rascunho: RascunhoAgendamento
-  agendamentos: Agendamento[]
   setServico: (servicoId: string) => void
   setDataHora: (data: string, horario: string) => void
   setCliente: (cliente: DadosCliente) => void
-  confirmar: (agendamento: Agendamento) => void
   resetar: () => void
 }
 
@@ -37,22 +34,8 @@ const AgendamentoContext = createContext<AgendamentoContextValue | undefined>(
   undefined,
 )
 
-const STORAGE_KEY = 'gaby-nails-agendamentos'
-
 export function AgendamentoProvider({ children }: { children: ReactNode }) {
   const [rascunho, setRascunho] = useState<RascunhoAgendamento>(rascunhoInicial)
-  const [agendamentos, setAgendamentos] = useState<Agendamento[]>(() => {
-    try {
-      const salvo = localStorage.getItem(STORAGE_KEY)
-      return salvo ? (JSON.parse(salvo) as Agendamento[]) : []
-    } catch {
-      return []
-    }
-  })
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(agendamentos))
-  }, [agendamentos])
 
   const setServico = (servicoId: string) =>
     setRascunho((r) => ({ ...r, servicoId }))
@@ -63,20 +46,15 @@ export function AgendamentoProvider({ children }: { children: ReactNode }) {
   const setCliente = (cliente: DadosCliente) =>
     setRascunho((r) => ({ ...r, cliente }))
 
-  const confirmar = (agendamento: Agendamento) =>
-    setAgendamentos((lista) => [agendamento, ...lista])
-
   const resetar = () => setRascunho(rascunhoInicial)
 
   return (
     <AgendamentoContext.Provider
       value={{
         rascunho,
-        agendamentos,
         setServico,
         setDataHora,
         setCliente,
-        confirmar,
         resetar,
       }}
     >

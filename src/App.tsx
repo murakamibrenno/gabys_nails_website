@@ -6,6 +6,8 @@ import Home from './pages/Home'
 import Catalogo from './pages/Catalogo'
 import Galeria from './pages/Galeria'
 import Agendamento from './pages/Agendamento'
+import AdminLogin from './pages/AdminLogin'
+import AdminDashboard from './pages/AdminDashboard'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -15,10 +17,9 @@ function ScrollToTop() {
   return null
 }
 
-export default function App() {
+function SiteLayout() {
   return (
-    <div className="flex min-h-screen flex-col">
-      <ScrollToTop />
+    <>
       <Navbar />
       <main className="flex-1">
         <Routes>
@@ -29,6 +30,19 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+    </>
+  )
+}
+
+export default function App() {
+  return (
+    <div className="flex min-h-screen flex-col">
+      <ScrollToTop />
+      <Routes>
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/*" element={<SiteLayout />} />
+      </Routes>
     </div>
   )
 }

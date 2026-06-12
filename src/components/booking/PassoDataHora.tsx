@@ -1,4 +1,7 @@
-import { proximosDias, horariosDoDia } from '../../data/agenda'
+import { useEffect, useState } from 'react'
+import { proximosDias } from '../../data/agenda'
+import { fetchAvailability } from '../../services/api'
+import type { HorarioDisponivel } from '../../types'
 
 interface Props {
   data: string | null
@@ -15,7 +18,23 @@ export default function PassoDataHora({
   onSelecionarData,
   onSelecionarHorario,
 }: Props) {
-  const horarios = data ? horariosDoDia(data) : []
+  const [horarios, setHorarios] = useState<HorarioDisponivel[]>([])
+  const [carregando, setCarregando] = useState(false)
+  const [erro, setErro] = useState('')
+
+  useEffect(() => {
+    if (!data) {
+      setHorarios([])
+      return
+    }
+
+    setCarregando(true)
+    setErro('')
+    fetchAvailability(data)
+      .then((res) => setHorarios(res.horarios))
+      .catch(() => setErro('Não foi possível carregar os horários.'))
+      .finally(() => setCarregando(false))
+  }, [data])
 
   return (
     <div>
@@ -61,30 +80,38 @@ export default function PassoDataHora({
           <h3 className="mt-6 text-xs font-semibold uppercase tracking-wide text-vinho/60">
             Horário
           </h3>
-          <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
-            {horarios.map(({ horario: h, ocupado }) => {
-              const ativo = horario === h
-              return (
-                <button
-                  key={h}
-                  type="button"
-                  disabled={ocupado}
-                  onClick={() => onSelecionarHorario(h)}
-                  className={`rounded-xl border-2 py-2 text-sm font-semibold transition ${
-                    ocupado
-                      ? 'cursor-not-allowed border-transparent bg-creme-2 text-vinho/30 line-through'
-                      : ativo
-                        ? 'border-vinho bg-cereja text-creme'
-                        : 'border-vinho/15 bg-creme_branco text-vinho hover:border-vinho'
-                  }`}
-                >
-                  {h}
-                </button>
-              )
-            })}
-          </div>
+          {carregando && (
+            <p className="mt-3 text-sm text-vinho/60">Carregando horários...</p>
+          )}
+          {erro && (
+            <p className="mt-3 text-sm text-cereja">{erro}</p>
+          )}
+          {!carregando && !erro && (
+            <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
+              {horarios.map(({ horario: h, ocupado }) => {
+                const ativo = horario === h
+                return (
+                  <button
+                    key={h}
+                    type="button"
+                    disabled={ocupado}
+                    onClick={() => onSelecionarHorario(h)}
+                    className={`rounded-xl border-2 py-2 text-sm font-semibold transition ${
+                      ocupado
+                        ? 'cursor-not-allowed border-transparent bg-creme-2 text-vinho/30 line-through'
+                        : ativo
+                          ? 'border-vinho bg-cereja text-creme'
+                          : 'border-vinho/15 bg-creme_branco text-vinho hover:border-vinho'
+                    }`}
+                  >
+                    {h}
+                  </button>
+                )
+              })}
+            </div>
+          )}
           <p className="mt-3 text-xs text-vinho/60">
-            Horários riscados já estão ocupados.
+            Horários riscados já estão reservados.
           </p>
         </>
       )}

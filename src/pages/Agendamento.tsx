@@ -4,6 +4,7 @@ import { useAgendamento } from '../context/AgendamentoContext'
 import { getServico, formatarPreco } from '../data/servicos'
 import { formatarDataExtenso } from '../data/agenda'
 import type { DadosCliente, Agendamento } from '../types'
+import { createBooking } from '../services/api'
 import PassoServico from '../components/booking/PassoServico'
 import PassoDataHora from '../components/booking/PassoDataHora'
 import PassoDados from '../components/booking/PassoDados'
@@ -17,13 +18,14 @@ export default function AgendamentoPage() {
     setServico,
     setDataHora,
     setCliente,
-    confirmar,
     resetar,
   } = useAgendamento()
   const [params] = useSearchParams()
   const [passo, setPasso] = useState(0)
   const [erros, setErros] = useState<Partial<Record<keyof DadosCliente, string>>>({})
   const [concluido, setConcluido] = useState<Agendamento | null>(null)
+  const [enviando, setEnviando] = useState(false)
+  const [erroEnvio, setErroEnvio] = useState('')
 
   useEffect(() => {
     const servicoParam = params.get('servico')
@@ -60,20 +62,25 @@ export default function AgendamentoPage() {
 
   const voltar = () => setPasso((p) => Math.max(p - 1, 0))
 
-  const finalizar = () => {
+  const finalizar = async () => {
     if (!servico || !rascunho.data || !rascunho.horario) return
-    const agendamento: Agendamento = {
-      id: crypto.randomUUID(),
-      servicoId: servico.id,
-      servicoNome: servico.nome,
-      preco: servico.preco,
-      data: rascunho.data,
-      horario: rascunho.horario,
-      cliente: rascunho.cliente,
-      criadoEm: new Date().toISOString(),
+    setEnviando(true)
+    setErroEnvio('')
+    try {
+      const agendamento = await createBooking({
+        servicoId: servico.id,
+        data: rascunho.data,
+        horario: rascunho.horario,
+        cliente: rascunho.cliente,
+      })
+      setConcluido(agendamento)
+    } catch (err) {
+      setErroEnvio(
+        err instanceof Error ? err.message : 'Erro ao confirmar agendamento.',
+      )
+    } finally {
+      setEnviando(false)
     }
-    confirmar(agendamento)
-    setConcluido(agendamento)
   }
 
   const recomecar = () => {
@@ -181,11 +188,21 @@ export default function AgendamentoPage() {
                 Continuar
               </button>
             ) : (
-              <button onClick={finalizar} className="btn-primary">
-                Confirmar agendamento
+              <button
+                onClick={finalizar}
+                disabled={enviando}
+                className="btn-primary"
+              >
+                {enviando ? 'Reservando...' : 'Confirmar agendamento'}
               </button>
             )}
           </div>
+
+          {erroEnvio && (
+            <p className="mt-4 rounded-2xl border border-cereja/30 bg-creme-2 p-3 text-center text-sm text-cereja">
+              {erroEnvio}
+            </p>
+          )}
         </div>
 
         {servico && passo < 3 && (
@@ -225,7 +242,7 @@ function TelaSucesso({
         </h1>
         <p className="mt-2 text-vinho/70">
           Olá {agendamento.cliente.nome.split(' ')[0]}, seu horário está
-          reservado. Estamos te esperando!
+          reservado. Entraremos em contato pelo WhatsApp para confirmar!
         </p>
 
         <dl className="mt-6 space-y-2 rounded-3xl border border-vinho/10 bg-creme-2 p-5 text-left text-sm">

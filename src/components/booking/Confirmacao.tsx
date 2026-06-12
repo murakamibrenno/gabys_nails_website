@@ -47,7 +47,7 @@ export default function Confirmacao({ servico, data, horario, cliente }: Props) 
       </dl>
 
       <p className="mt-4 rounded-2xl border border-dashed border-vinho/25 bg-creme-2 p-3 text-center text-xs text-vinho/70">
-        Esta é uma simulação. Nenhuma mensagem real será enviada.
+        Após reservar, a Gaby entrará em contato pelo WhatsApp para confirmar.
       </p>
     </div>
   )

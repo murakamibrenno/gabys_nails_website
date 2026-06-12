@@ -40,6 +40,11 @@ export default function Footer() {
             <li>WhatsApp: (00) 00000-0000</li>
             <li>Instagram: @gabynails</li>
             <li>Atendimento com hora marcada</li>
+            <li>
+              <Link to="/admin/login" className="text-creme/40 hover:text-rosa">
+                Área admin
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
