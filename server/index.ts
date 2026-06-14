@@ -39,6 +39,6 @@ if (config.isProd) {
   })
 }
 
-app.listen(config.port, () => {
-  console.log(`API Gaby Nails rodando em http://localhost:${config.port}`)
+app.listen(config.port, config.host, () => {
+  console.log(`API Gaby Nails rodando em http://${config.host}:${config.port}`)
 })
