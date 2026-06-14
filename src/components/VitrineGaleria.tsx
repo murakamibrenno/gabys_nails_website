@@ -1,11 +1,16 @@
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { galeria } from '../data/galeria'
 import { Sparkle } from './Decor'
+import { sortearFotosGaleria } from '../utils/galeriaAleatoria'
 
-const featured = galeria[0]
-const resto = galeria.slice(1, 5)
+const QTD_FOTOS = 5
 
 export default function VitrineGaleria() {
+  const fotos = useMemo(() => sortearFotosGaleria(QTD_FOTOS), [])
+  const [featured, ...resto] = fotos
+
+  if (!featured) return null
+
   return (
     <section className="relative overflow-hidden py-16">
       <Sparkle className="absolute right-[10%] top-12 h-6 w-6 animate-twinkle text-rosa-forte" />
@@ -31,7 +36,6 @@ export default function VitrineGaleria() {
         </div>
 
         <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 md:grid-rows-2">
-          {/* Destaque grande */}
           <Link
             to="/galeria"
             className="group relative col-span-2 row-span-2 overflow-hidden rounded-[1.75rem] border-2 border-vinho"
@@ -39,6 +43,8 @@ export default function VitrineGaleria() {
             <img
               src={featured.src}
               alt={featured.titulo}
+              loading="eager"
+              decoding="async"
               className="h-full min-h-[260px] w-full object-cover transition duration-500 group-hover:scale-105"
             />
             <span className="absolute left-4 top-4 rounded-full bg-cereja px-3 py-1 text-xs font-semibold uppercase tracking-wide text-creme">
@@ -49,7 +55,6 @@ export default function VitrineGaleria() {
             </span>
           </Link>
 
-          {/* Mosaico secundário */}
           {resto.map((foto) => (
             <Link
               key={foto.id}
@@ -59,6 +64,8 @@ export default function VitrineGaleria() {
               <img
                 src={foto.src}
                 alt={foto.titulo}
+                loading="lazy"
+                decoding="async"
                 className="aspect-square h-full w-full object-cover transition duration-500 group-hover:scale-105"
               />
               <span className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-vinho-tinta/90 to-transparent p-3 transition duration-300 group-hover:translate-y-0">
