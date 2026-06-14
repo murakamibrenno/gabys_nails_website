@@ -13,7 +13,12 @@ interface RascunhoAgendamento {
   cliente: DadosCliente
 }
 
-const clienteVazio: DadosCliente = { nome: '', telefone: '', observacoes: '' }
+const clienteVazio: DadosCliente = {
+  nome: '',
+  telefone: '',
+  email: '',
+  observacoes: '',
+}
 
 const rascunhoInicial: RascunhoAgendamento = {
   servicoId: null,

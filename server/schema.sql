@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS bookings (
   time         TEXT NOT NULL,
   client_name  TEXT NOT NULL,
   client_phone TEXT NOT NULL,
+  client_email TEXT,
   notes        TEXT,
   status       TEXT NOT NULL DEFAULT 'pending',
   created_at   TEXT NOT NULL

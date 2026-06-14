@@ -76,6 +76,12 @@ export default function PainelAgendamento({
               <dt className="text-vinho/60">Telefone</dt>
               <dd className="font-semibold">{b.cliente.telefone}</dd>
             </div>
+            {b.cliente.email && (
+              <div className="flex justify-between gap-4">
+                <dt className="text-vinho/60">Email</dt>
+                <dd className="text-right font-semibold">{b.cliente.email}</dd>
+              </div>
+            )}
             {b.cliente.observacoes && (
               <div>
                 <dt className="text-vinho/60">Observações</dt>

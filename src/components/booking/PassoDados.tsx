@@ -56,6 +56,22 @@ export default function PassoDados({ cliente, erros, onAlterar }: Props) {
 
         <div>
           <label className="mb-1 block text-sm font-semibold text-vinho">
+            Email (opcional)
+          </label>
+          <input
+            type="email"
+            value={cliente.email}
+            onChange={(e) => campo('email', e.target.value)}
+            placeholder="seuemail@exemplo.com"
+            className={`${inputBase} ${erros.email ? 'border-cereja' : 'border-vinho/15'}`}
+          />
+          {erros.email && (
+            <p className="mt-1 text-xs text-cereja">{erros.email}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-semibold text-vinho">
             Observações (opcional)
           </label>
           <textarea

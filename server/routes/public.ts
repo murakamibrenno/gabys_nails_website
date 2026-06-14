@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto'
 import { getDb, type BookingRow } from '../db.js'
 import { HORARIOS_BASE } from '../slots.js'
 import { getServico } from '../servicos.js'
+import { notifyBookingCreated } from '../notifications.js'
 
 const router = Router()
 
@@ -25,6 +26,7 @@ function rowToJson(row: BookingRow) {
     cliente: {
       nome: row.client_name,
       telefone: row.client_phone,
+      email: row.client_email ?? '',
       observacoes: row.notes ?? '',
     },
     criadoEm: row.created_at,
@@ -65,7 +67,12 @@ router.post('/bookings', bookingLimiter, (req, res) => {
     servicoId?: string
     data?: string
     horario?: string
-    cliente?: { nome?: string; telefone?: string; observacoes?: string }
+    cliente?: {
+      nome?: string
+      telefone?: string
+      email?: string
+      observacoes?: string
+    }
   }
 
   const servico = servicoId ? getServico(servicoId) : undefined
@@ -84,6 +91,7 @@ router.post('/bookings', bookingLimiter, (req, res) => {
 
   const nome = cliente?.nome?.trim() ?? ''
   const telefone = cliente?.telefone?.replace(/\D/g, '') ?? ''
+  const email = cliente?.email?.trim().toLowerCase() ?? ''
   const observacoes = cliente?.observacoes?.trim() ?? ''
 
   if (nome.length < 2) {
@@ -92,6 +100,10 @@ router.post('/bookings', bookingLimiter, (req, res) => {
   }
   if (telefone.length < 10) {
     res.status(400).json({ error: 'Informe um telefone válido.' })
+    return
+  }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    res.status(400).json({ error: 'Informe um email válido.' })
     return
   }
 
@@ -112,8 +124,8 @@ router.post('/bookings', bookingLimiter, (req, res) => {
       .prepare(
         `INSERT INTO bookings
          (id, service_id, service_name, price, date, time,
-          client_name, client_phone, notes, status, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)`,
+          client_name, client_phone, client_email, notes, status, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)`,
       )
       .run(
         id,
@@ -124,6 +136,7 @@ router.post('/bookings', bookingLimiter, (req, res) => {
         horario,
         nome,
         telefone,
+        email || null,
         observacoes || null,
         createdAt,
       )
@@ -139,6 +152,10 @@ router.post('/bookings', bookingLimiter, (req, res) => {
   const row = getDb()
     .prepare('SELECT * FROM bookings WHERE id = ?')
     .get(id) as BookingRow
+
+  notifyBookingCreated(row).catch((err: unknown) => {
+    console.error('Falha ao enviar email de novo agendamento:', err)
+  })
 
   res.status(201).json(rowToJson(row))
 })

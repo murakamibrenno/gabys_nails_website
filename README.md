@@ -42,6 +42,15 @@ ADMIN_PASSWORD=gaby123
 JWT_SECRET=troque-este-segredo-antes-de-producao
 DATABASE_PATH=./server/data/database.sqlite
 NODE_ENV=production   # usar na VPS
+PUBLIC_URL=https://seudominio.com
+
+# Email de notificação de agendamentos
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=seu-email@gmail.com
+SMTP_PASS=senha-de-app-google
+NOTIFY_EMAIL=email-que-recebe-os-agendamentos@gmail.com
 ```
 
 ## Produção (VPS)

@@ -25,6 +25,13 @@ export function runMigrations(): void {
   const database = getDb()
   const schema = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf-8')
   database.exec(schema)
+
+  const columns = database.prepare('PRAGMA table_info(bookings)').all() as {
+    name: string
+  }[]
+  if (!columns.some((column) => column.name === 'client_email')) {
+    database.exec('ALTER TABLE bookings ADD COLUMN client_email TEXT')
+  }
 }
 
 export type BookingRow = {
@@ -36,6 +43,7 @@ export type BookingRow = {
   time: string
   client_name: string
   client_phone: string
+  client_email: string | null
   notes: string | null
   status: 'pending' | 'confirmed' | 'cancelled'
   created_at: string

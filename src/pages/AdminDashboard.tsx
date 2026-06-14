@@ -246,6 +246,11 @@ export default function AdminDashboard() {
                               Obs: {b.cliente.observacoes}
                             </p>
                           )}
+                          {b.cliente.email && (
+                            <p className="mt-1 text-sm text-vinho/60">
+                              Email: {b.cliente.email}
+                            </p>
+                          )}
                         </div>
                         <div className="flex w-full flex-col gap-2 sm:w-auto sm:items-end">
                           <a

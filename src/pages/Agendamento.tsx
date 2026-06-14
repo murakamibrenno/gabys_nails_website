@@ -51,6 +51,12 @@ export default function AgendamentoPage() {
     if (rascunho.cliente.telefone.replace(/\D/g, '').length < 10) {
       novosErros.telefone = 'Informe um telefone válido.'
     }
+    if (
+      rascunho.cliente.email.trim() &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rascunho.cliente.email.trim())
+    ) {
+      novosErros.email = 'Informe um email válido.'
+    }
     setErros(novosErros)
     return Object.keys(novosErros).length === 0
   }

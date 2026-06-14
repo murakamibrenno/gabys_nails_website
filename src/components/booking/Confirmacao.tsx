@@ -17,6 +17,7 @@ export default function Confirmacao({ servico, data, horario, cliente }: Props) 
     { rotulo: 'Horário', valor: horario },
     { rotulo: 'Nome', valor: cliente.nome },
     { rotulo: 'Contato', valor: cliente.telefone },
+    ...(cliente.email ? [{ rotulo: 'Email', valor: cliente.email }] : []),
   ]
 
   return (

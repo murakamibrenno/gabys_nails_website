@@ -18,6 +18,7 @@ export interface FotoGaleria {
 export interface DadosCliente {
   nome: string
   telefone: string
+  email: string
   observacoes: string
 }
 
