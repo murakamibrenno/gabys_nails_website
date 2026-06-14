@@ -1,11 +1,17 @@
 import type { Servico } from '../types'
 
+export const OBSERVACAO_SUGESTAO =
+  'Ainda não decidi — vamos combinar os detalhes no dia do atendimento.'
+
+export const AVISO_PRECO =
+  'Valores base. O preço final pode variar conforme os detalhes do serviço, combinados diretamente com a Gaby antes ou no dia do atendimento.'
+
 export const servicos: Servico[] = [
   {
     id: 'alongamento',
     nome: 'Alongamento em Gel',
     preco: 190,
-    duracaoMin: 150,
+    duracaoMin: 180,
     descricao:
       'Alongamento das unhas em gel com acabamento natural e resistente, ideal para quem quer unhas longas, bonitas e duradouras.',
     inclui: [

@@ -56,9 +56,6 @@ export default function CarrosselUnhas() {
         ))}
 
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-vinho-tinta/80 to-transparent p-3">
-          <span className="block text-[0.6rem] uppercase tracking-ultra text-rosa">
-            {atual.categoria}
-          </span>
           <span className="font-display text-base text-creme">{atual.titulo}</span>
         </div>
       </div>

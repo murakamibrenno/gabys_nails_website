@@ -48,7 +48,7 @@ export default function VitrineGaleria() {
               className="h-full min-h-[260px] w-full object-cover transition duration-500 group-hover:scale-105"
             />
             <span className="absolute left-4 top-4 rounded-full bg-cereja px-3 py-1 text-xs font-semibold uppercase tracking-wide text-creme">
-              {featured.categoria}
+              Destaque
             </span>
             <span className="absolute bottom-4 left-4 font-display text-2xl text-creme drop-shadow-[0_2px_8px_rgba(74,10,20,0.8)]">
               {featured.titulo}
@@ -69,9 +69,6 @@ export default function VitrineGaleria() {
                 className="aspect-square h-full w-full object-cover transition duration-500 group-hover:scale-105"
               />
               <span className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-vinho-tinta/90 to-transparent p-3 transition duration-300 group-hover:translate-y-0">
-                <span className="block text-[0.6rem] uppercase tracking-ultra text-rosa">
-                  {foto.categoria}
-                </span>
                 <span className="font-display text-sm text-creme">{foto.titulo}</span>
               </span>
             </Link>

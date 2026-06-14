@@ -4,6 +4,7 @@ import { fetchAvailability } from '../../services/api'
 import type { HorarioDisponivel } from '../../types'
 
 interface Props {
+  servicoId: string | null
   data: string | null
   horario: string | null
   onSelecionarData: (iso: string) => void
@@ -13,6 +14,7 @@ interface Props {
 const dias = proximosDias(14)
 
 export default function PassoDataHora({
+  servicoId,
   data,
   horario,
   onSelecionarData,
@@ -23,18 +25,23 @@ export default function PassoDataHora({
   const [erro, setErro] = useState('')
 
   useEffect(() => {
-    if (!data) {
+    if (!data || !servicoId) {
       setHorarios([])
       return
     }
 
     setCarregando(true)
     setErro('')
-    fetchAvailability(data)
-      .then((res) => setHorarios(res.horarios))
+    fetchAvailability(data, servicoId)
+      .then((res) => {
+        setHorarios(res.horarios)
+        if (horario && res.horarios.some((h) => h.horario === horario && h.ocupado)) {
+          onSelecionarHorario('')
+        }
+      })
       .catch(() => setErro('Não foi possível carregar os horários.'))
       .finally(() => setCarregando(false))
-  }, [data])
+  }, [data, servicoId])
 
   return (
     <div>
@@ -111,7 +118,8 @@ export default function PassoDataHora({
             </div>
           )}
           <p className="mt-3 text-xs text-vinho/60">
-            Horários riscados já estão reservados.
+            Horários riscados não cabem na agenda para a duração deste serviço
+            ou conflitam com outro agendamento.
           </p>
         </>
       )}

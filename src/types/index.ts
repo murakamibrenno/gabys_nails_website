@@ -11,7 +11,6 @@ export interface Servico {
 export interface FotoGaleria {
   id: string
   titulo: string
-  categoria: string
   src?: string
 }
 

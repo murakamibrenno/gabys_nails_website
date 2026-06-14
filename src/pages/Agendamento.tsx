@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useAgendamento } from '../context/AgendamentoContext'
-import { getServico, formatarPreco } from '../data/servicos'
+import { getServico, formatarPreco, AVISO_PRECO } from '../data/servicos'
 import { formatarDataExtenso } from '../data/agenda'
 import type { DadosCliente, Agendamento } from '../types'
 import { createBooking } from '../services/api'
@@ -150,6 +150,7 @@ export default function AgendamentoPage() {
           )}
           {passo === 1 && (
             <PassoDataHora
+              servicoId={rascunho.servicoId}
               data={rascunho.data}
               horario={rascunho.horario}
               onSelecionarData={(iso) => setDataHora(iso, '')}
@@ -212,15 +213,25 @@ export default function AgendamentoPage() {
         </div>
 
         {servico && passo < 3 && (
-          <div className="mt-4 flex items-center justify-between rounded-2xl border border-vinho/10 bg-creme_branco px-5 py-3 text-sm shadow-suave">
-            <span className="text-vinho/70">
-              {servico.nome}
-              {rascunho.data && ` · ${formatarDataExtenso(rascunho.data).split(',')[0]}`}
-              {rascunho.horario && ` · ${rascunho.horario}`}
-            </span>
-            <span className="font-bold text-cereja">
-              {formatarPreco(servico.preco)}
-            </span>
+          <div className="mt-4 rounded-2xl border border-vinho/10 bg-creme_branco px-5 py-3 text-sm shadow-suave">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-vinho/70">
+                {servico.nome}
+                {rascunho.data && ` · ${formatarDataExtenso(rascunho.data).split(',')[0]}`}
+                {rascunho.horario && ` · ${rascunho.horario}`}
+              </span>
+              <span className="text-right">
+                <span className="block text-[0.65rem] font-semibold uppercase tracking-wide text-vinho/50">
+                  Valor base
+                </span>
+                <span className="font-bold text-cereja">
+                  {formatarPreco(servico.preco)}
+                </span>
+              </span>
+            </div>
+            <p className="mt-2 border-t border-vinho/10 pt-2 text-xs leading-relaxed text-vinho/60">
+              {AVISO_PRECO}
+            </p>
           </div>
         )}
       </div>
@@ -257,9 +268,10 @@ function TelaSucesso({
             <dd className="font-semibold text-vinho-tinta">{agendamento.servicoNome}</dd>
           </div>
           <div className="flex justify-between">
-            <dt className="text-vinho/70">Valor</dt>
+            <dt className="text-vinho/70">Valor base</dt>
             <dd className="font-semibold text-vinho-tinta">{formatarPreco(agendamento.preco)}</dd>
           </div>
+          <p className="text-xs leading-relaxed text-vinho/60">{AVISO_PRECO}</p>
           <div className="flex justify-between">
             <dt className="text-vinho/70">Quando</dt>
             <dd className="font-semibold text-vinho-tinta">

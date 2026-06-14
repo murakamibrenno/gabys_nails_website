@@ -4,6 +4,11 @@ import { randomUUID } from 'node:crypto'
 import { getDb, type BookingRow } from '../db.js'
 import { HORARIOS_BASE } from '../slots.js'
 import { getServico } from '../servicos.js'
+import {
+  horariosDisponiveis,
+  reservasFromRows,
+  slotDisponivel,
+} from '../availability.js'
 import { notifyBookingCreated } from '../notifications.js'
 
 const router = Router()
@@ -35,26 +40,31 @@ function rowToJson(row: BookingRow) {
 
 router.get('/availability', (req, res) => {
   const date = String(req.query.date ?? '')
+  const servicoId = String(req.query.servicoId ?? '')
+
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     res.status(400).json({ error: 'Data inválida.' })
     return
   }
 
+  const servico = getServico(servicoId)
+  if (!servico) {
+    res.status(400).json({ error: 'Serviço inválido.' })
+    return
+  }
+
   const db = getDb()
-  const ocupados = db
+  const rows = db
     .prepare(
-      `SELECT time FROM bookings
+      `SELECT time, service_id FROM bookings
        WHERE date = ? AND status IN ('pending', 'confirmed')`,
     )
-    .all(date) as { time: string }[]
+    .all(date) as { time: string; service_id: string }[]
 
-  const setOcupados = new Set(ocupados.map((r) => r.time))
-  const horarios = HORARIOS_BASE.map((horario) => ({
-    horario,
-    ocupado: setOcupados.has(horario),
-  }))
+  const reservas = reservasFromRows(rows)
+  const horarios = horariosDisponiveis(servico.duracaoMin, reservas)
 
-  res.json({ date, horarios })
+  res.json({ date, servicoId, horarios })
 })
 
 router.post('/bookings', bookingLimiter, (req, res) => {
@@ -113,6 +123,23 @@ router.post('/bookings', bookingLimiter, (req, res) => {
   const dataAg = new Date(y, m - 1, d)
   if (dataAg <= hoje) {
     res.status(400).json({ error: 'Escolha uma data futura.' })
+    return
+  }
+
+  const db = getDb()
+  const reservas = reservasFromRows(
+    db
+      .prepare(
+        `SELECT time, service_id FROM bookings
+         WHERE date = ? AND status IN ('pending', 'confirmed')`,
+      )
+      .all(data) as { time: string; service_id: string }[],
+  )
+
+  if (!slotDisponivel(horario, servico.duracaoMin, reservas)) {
+    res.status(409).json({
+      error: 'Este horário não está disponível para a duração do serviço escolhido.',
+    })
     return
   }
 

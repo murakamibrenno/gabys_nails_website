@@ -3,7 +3,7 @@ export const servicos = [
     id: 'alongamento',
     nome: 'Alongamento em Gel',
     preco: 190,
-    duracaoMin: 150,
+    duracaoMin: 180,
   },
   {
     id: 'manutencao',

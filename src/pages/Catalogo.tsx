@@ -1,6 +1,6 @@
 import ServicoCard from '../components/ServicoCard'
 import { Cherry } from '../components/Decor'
-import { servicos } from '../data/servicos'
+import { servicos, AVISO_PRECO } from '../data/servicos'
 
 export default function Catalogo() {
   return (
@@ -12,8 +12,8 @@ export default function Catalogo() {
           Catálogo de <span className="italic text-cereja">serviços</span>
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-vinho/70">
-          Todos os valores já incluem a esmaltação em gel e as decorações. Sem
-          surpresas, só capricho.
+          Valores base já incluem esmaltação em gel e decorações. Detalhes extras
+          podem ser combinados diretamente com a Gaby.
         </p>
       </header>
 
@@ -23,9 +23,12 @@ export default function Catalogo() {
         ))}
       </div>
 
-      <div className="mx-auto mt-12 max-w-2xl rounded-2xl border border-dashed border-vinho/25 bg-creme-2 p-5 text-center text-sm text-vinho/75">
-        Os tempos de atendimento são estimativas e podem variar conforme o
-        comprimento e o estilo escolhido.
+      <div className="mx-auto mt-12 max-w-2xl space-y-3 rounded-2xl border border-dashed border-vinho/25 bg-creme-2 p-5 text-center text-sm text-vinho/75">
+        <p>{AVISO_PRECO}</p>
+        <p>
+          Os tempos de atendimento são estimativas e podem variar conforme o
+          comprimento e o estilo escolhido.
+        </p>
       </div>
     </div>
   )

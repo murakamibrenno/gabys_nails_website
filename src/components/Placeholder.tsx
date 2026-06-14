@@ -19,9 +19,6 @@ export default function Placeholder({ foto }: { foto: FotoGaleria }) {
         </div>
       )}
       <figcaption className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-vinho-tinta/90 to-transparent p-4 text-left text-creme transition duration-300 group-hover:translate-y-0">
-        <span className="block text-[0.65rem] uppercase tracking-ultra text-rosa">
-          {foto.categoria}
-        </span>
         <span className="font-display text-base">{foto.titulo}</span>
       </figcaption>
     </figure>

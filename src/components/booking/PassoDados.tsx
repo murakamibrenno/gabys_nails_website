@@ -1,4 +1,5 @@
 import type { DadosCliente } from '../../types'
+import { OBSERVACAO_SUGESTAO } from '../../data/servicos'
 
 interface Props {
   cliente: DadosCliente
@@ -12,6 +13,8 @@ const inputBase =
 export default function PassoDados({ cliente, erros, onAlterar }: Props) {
   const campo = (chave: keyof DadosCliente, valor: string) =>
     onAlterar({ ...cliente, [chave]: valor })
+
+  const sugestaoAtiva = cliente.observacoes === OBSERVACAO_SUGESTAO
 
   return (
     <div>
@@ -81,6 +84,19 @@ export default function PassoDados({ cliente, erros, onAlterar }: Props) {
             placeholder="Alguma ideia de cor, decoração ou referência?"
             className={`${inputBase} resize-none border-vinho/15`}
           />
+          <button
+            type="button"
+            onClick={() =>
+              campo('observacoes', sugestaoAtiva ? '' : OBSERVACAO_SUGESTAO)
+            }
+            className={`mt-2 rounded-full border-2 px-3 py-1.5 text-xs font-semibold transition ${
+              sugestaoAtiva
+                ? 'border-vinho bg-cereja text-creme'
+                : 'border-vinho/15 bg-creme_branco text-vinho hover:border-vinho'
+            }`}
+          >
+            Não sei ainda — combinar no dia
+          </button>
         </div>
       </div>
     </div>

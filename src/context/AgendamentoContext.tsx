@@ -43,7 +43,7 @@ export function AgendamentoProvider({ children }: { children: ReactNode }) {
   const [rascunho, setRascunho] = useState<RascunhoAgendamento>(rascunhoInicial)
 
   const setServico = (servicoId: string) =>
-    setRascunho((r) => ({ ...r, servicoId }))
+    setRascunho((r) => ({ ...r, servicoId, horario: null }))
 
   const setDataHora = (data: string, horario: string) =>
     setRascunho((r) => ({ ...r, data, horario }))

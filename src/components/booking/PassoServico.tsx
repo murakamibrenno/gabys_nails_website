@@ -1,4 +1,4 @@
-import { servicos, formatarPreco } from '../../data/servicos'
+import { servicos, formatarPreco, AVISO_PRECO } from '../../data/servicos'
 
 interface Props {
   servicoId: string | null
@@ -13,7 +13,7 @@ export default function PassoServico({ servicoId, onSelecionar }: Props) {
         Escolha o <span className="italic text-cereja">serviço</span>
       </h2>
       <p className="mt-1 text-sm text-vinho/70">
-        Valores já com esmaltação em gel e decorações inclusas.
+        Valores base já com esmaltação em gel e decorações inclusas.
       </p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -49,7 +49,10 @@ export default function PassoServico({ servicoId, onSelecionar }: Props) {
                 </span>
               </div>
               <p className="mt-1 text-sm text-vinho/70">{servico.descricao}</p>
-              <p className="mt-3 font-display text-3xl font-semibold text-cereja">
+              <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-vinho/50">
+                A partir de
+              </p>
+              <p className="font-display text-3xl font-semibold text-cereja">
                 {formatarPreco(servico.preco)}
               </p>
               <p className="text-xs text-vinho/60">≈ {servico.duracaoMin} min</p>
@@ -57,6 +60,10 @@ export default function PassoServico({ servicoId, onSelecionar }: Props) {
           )
         })}
       </div>
+
+      <p className="mt-4 rounded-2xl border border-dashed border-vinho/20 bg-creme-2 p-3 text-xs leading-relaxed text-vinho/70">
+        {AVISO_PRECO}
+      </p>
     </div>
   )
 }

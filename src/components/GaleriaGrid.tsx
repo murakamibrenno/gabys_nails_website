@@ -5,7 +5,7 @@ export default function GaleriaGrid({ fotos }: { fotos: FotoGaleria[] }) {
   if (fotos.length === 0) {
     return (
       <p className="py-12 text-center text-vinho/60">
-        Nenhuma foto nesta categoria ainda.
+        Nenhuma foto na galeria ainda.
       </p>
     )
   }

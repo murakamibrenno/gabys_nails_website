@@ -1,5 +1,5 @@
 import type { Servico, DadosCliente } from '../../types'
-import { formatarPreco } from '../../data/servicos'
+import { formatarPreco, AVISO_PRECO } from '../../data/servicos'
 import { formatarDataExtenso } from '../../data/agenda'
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 export default function Confirmacao({ servico, data, horario, cliente }: Props) {
   const linhas = [
     { rotulo: 'Serviço', valor: servico.nome },
-    { rotulo: 'Valor', valor: formatarPreco(servico.preco) },
+    { rotulo: 'Valor base', valor: formatarPreco(servico.preco) },
     { rotulo: 'Data', valor: formatarDataExtenso(data) },
     { rotulo: 'Horário', valor: horario },
     { rotulo: 'Nome', valor: cliente.nome },
@@ -46,6 +46,8 @@ export default function Confirmacao({ servico, data, horario, cliente }: Props) 
           </div>
         )}
       </dl>
+
+      <p className="mt-3 text-xs leading-relaxed text-vinho/65">{AVISO_PRECO}</p>
 
       <p className="mt-4 rounded-2xl border border-dashed border-vinho/25 bg-creme-2 p-3 text-center text-xs text-vinho/70">
         Após reservar, a Gaby entrará em contato pelo WhatsApp para confirmar.

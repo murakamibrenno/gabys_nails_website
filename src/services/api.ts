@@ -23,8 +23,10 @@ async function request<T>(
 
 export async function fetchAvailability(
   date: string,
+  servicoId: string,
 ): Promise<{ date: string; horarios: HorarioDisponivel[] }> {
-  return request(`/api/availability?date=${encodeURIComponent(date)}`)
+  const qs = new URLSearchParams({ date, servicoId })
+  return request(`/api/availability?${qs}`)
 }
 
 export async function createBooking(payload: {

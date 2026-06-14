@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import type { Servico } from '../types'
-import { formatarPreco } from '../data/servicos'
+import { formatarPreco, AVISO_PRECO } from '../data/servicos'
 import { Sparkle } from './Decor'
 
 export default function ServicoCard({ servico }: { servico: Servico }) {
@@ -29,12 +29,16 @@ export default function ServicoCard({ servico }: { servico: Servico }) {
       </p>
 
       <div className="mt-6 flex items-baseline gap-1 text-cereja">
+        <span className="mr-1 self-end text-xs font-semibold uppercase tracking-wide text-vinho/50">
+          A partir de
+        </span>
         <span className="text-lg font-semibold">R$</span>
         <span className="font-display text-5xl font-semibold leading-none">
           {reais}
         </span>
         <span className="text-lg font-semibold">,{centavos}</span>
       </div>
+      <p className="mt-2 text-xs leading-relaxed text-vinho/60">{AVISO_PRECO}</p>
 
       <ul className="mt-6 space-y-2.5 border-t border-dashed border-vinho/15 pt-5">
         {servico.inclui.map((item) => (
