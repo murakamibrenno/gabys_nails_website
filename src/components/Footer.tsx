@@ -37,8 +37,28 @@ export default function Footer() {
             <Sparkle className="h-3.5 w-3.5 text-rosa" /> Contato
           </h3>
           <ul className="mt-4 space-y-2.5 text-sm text-creme/70">
-            <li>WhatsApp: (00) 00000-0000</li>
-            <li>Instagram: @gabynails</li>
+            <li>
+              WhatsApp:{' '}
+              <a
+                href="https://wa.me/5518997506265"
+                className="transition hover:text-rosa"
+                target="_blank"
+                rel="noreferrer"
+              >
+                +55 (18) 99750-6265
+              </a>
+            </li>
+            <li>
+              Instagram:{' '}
+              <a
+                href="https://www.instagram.com/gaby_nailarts_/"
+                className="transition hover:text-rosa"
+                target="_blank"
+                rel="noreferrer"
+              >
+                @gaby_nailarts_
+              </a>
+            </li>
             <li>Atendimento com hora marcada</li>
             <li>
               <Link to="/admin/login" className="text-creme/40 hover:text-rosa">
